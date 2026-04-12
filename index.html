@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30 Days · 30 Seconds · LinkedIn Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f5f0e8;
+    --accent: #e8390e;
+    --gold: #c9a84c;
+    --muted: #8a8070;
+    --card-bg: #fdfaf4;
+    --done: #2d6a4f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 60px 40px 40px;
+    border-bottom: 3px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 18vw, 200px);
+    color: var(--ink);
+    opacity: 0.04;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    width: fit-content;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 10vw, 110px);
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    position: relative;
+  }
+
+  .hero h1 span {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.6;
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 16px;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .meta-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .meta-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    padding: 20px 40px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 1s ease;
+  }
+
+  .progress-pct {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* FILTER TABS */
+  .filters {
+    padding: 20px 40px 0;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    margin: 20px 40px 40px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    background: #fff;
+    z-index: 1;
+    transform: scale(1.01);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .card.done {
+    background: #f0f7f4;
+  }
+
+  .card.done::after {
+    content: '✓ POSTED';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--done);
+    border: 1px solid var(--done);
+    padding: 2px 6px;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .day-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    line-height: 1;
+    color: rgba(0,0,0,0.08);
+    flex-shrink: 0;
+    transition: color 0.15s;
+  }
+
+  .card:hover .day-num {
+    color: var(--accent);
+  }
+
+  .card.done .day-num {
+    color: var(--done);
+    opacity: 0.3;
+  }
+
+  .tag {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 3px 8px;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+  }
+
+  .tag-insight { color: #1a6b8a; }
+  .tag-story { color: #7b3f00; }
+  .tag-lesson { color: #5c3d99; }
+  .tag-fun { color: #b5451b; }
+  .tag-people { color: #1a6b4a; }
+  .tag-mindset { color: #8a5a00; }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+
+  .card-draft {
+    font-size: 12px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.55;
+    border-left: 2px solid var(--gold);
+    padding-left: 10px;
+  }
+
+  .card-hook {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .done-toggle {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.15s;
+    z-index: 2;
+  }
+
+  .done-toggle:hover { background: var(--ink); color: var(--paper); }
+  .card.done .done-toggle { background: var(--done); border-color: var(--done); color: white; }
+
+  /* FOOTER */
+  .footer {
+    padding: 30px 40px;
+    border-top: 3px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.02em;
+  }
+
+  .footer-text span { color: var(--accent); }
+
+  .footer-note {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--muted);
+    font-style: italic;
+    max-width: 300px;
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 600px) {
+    .hero, .progress-wrap, .filters, .grid { margin: 0; padding: 24px 20px; }
+    .grid { margin: 10px 0 20px; }
+    .hero-meta { gap: 20px; }
+    .footer { padding: 24px 20px; }
+    .footer-note { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-bg-text">30</div>
+  <div class="badge">⚡ LinkedIn Challenge</div>
+  <h1>30 DAYS<br><span>30 SECONDS</span></h1>
+  <p class="hero-sub">Because attention spans are shrinking — so I'm making every post worth your 30 seconds. Real stories. Real lessons. Zero fluff.</p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <span class="meta-num">30</span>
+      <span class="meta-label">Posts</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-num">30</span>
+      <span class="meta-label">Seconds Each</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-num" id="done-count">0</span>
+      <span class="meta-label">Posted</span>
+    </div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <span class="progress-label">Challenge Progress</span>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <span class="progress-pct" id="progress-pct">0%</span>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCards('all', this)">All 30</button>
+  <button class="filter-btn" onclick="filterCards('insight', this)">💡 Insight</button>
+  <button class="filter-btn" onclick="filterCards('story', this)">📖 Story</button>
+  <button class="filter-btn" onclick="filterCards('lesson', this)">🎓 Lesson</button>
+  <button class="filter-btn" onclick="filterCards('fun', this)">🔥 Fun</button>
+  <button class="filter-btn" onclick="filterCards('people', this)">🤝 People</button>
+  <button class="filter-btn" onclick="filterCards('mindset', this)">🧠 Mindset</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="footer">
+  <div class="footer-text">START SMALL.<br><span>STAY CONSISTENT.</span></div>
+  <p class="footer-note">Click the checkbox on any card to mark it as posted. Your progress saves automatically.</p>
+</div>
+
+<script>
+const posts = [
+  {
+    day: 1, tag: "story", tagLabel: "Story",
+    title: "Why I'm starting this 30-day challenge",
+    hook: "Day 1 / 30",
+    draft: "I've watched people write blogs, record podcasts, share thoughts for years. Today I stop watching. Here's my bet: 30 seconds of your time, 30 days straight. Let's see what happens. 🚀 #30Days30Seconds"
+  },
+  {
+    day: 2, tag: "insight", tagLabel: "Insight",
+    title: "The one habit that changed my mornings",
+    hook: "Day 2 / 30",
+    draft: "I used to check my phone first thing. Now I don't touch it for 30 minutes. My mornings got 10x calmer. Small shift. Massive difference. What's your morning ritual?"
+  },
+  {
+    day: 3, tag: "lesson", tagLabel: "Lesson",
+    title: "The best advice I ignored — then wished I hadn't",
+    hook: "Day 3 / 30",
+    draft: "Someone once told me: 'Done is better than perfect.' I laughed. Then I spent 3 months perfecting something no one ever saw. Lesson learned the hard way."
+  },
+  {
+    day: 4, tag: "fun", tagLabel: "Fun",
+    title: "A weird thing I noticed about how I work best",
+    hook: "Day 4 / 30",
+    draft: "Turns out I do my best thinking in the shower, on walks, and weirdly… in traffic. Nowhere near my desk. Anyone else relate? 😂 #WorkStyle"
+  },
+  {
+    day: 5, tag: "people", tagLabel: "People",
+    title: "The person who believed in me before I did",
+    hook: "Day 5 / 30",
+    draft: "There's always someone who saw it in you before you did. Mine was [Name]. One sentence from them changed my entire direction. Who was yours?"
+  },
+  {
+    day: 6, tag: "mindset", tagLabel: "Mindset",
+    title: "What 'failure' actually taught me",
+    hook: "Day 6 / 30",
+    draft: "My biggest failure wasn't a dead end. It was a detour with a better view. I just couldn't see it while I was in it. What has failure quietly taught you?"
+  },
+  {
+    day: 7, tag: "insight", tagLabel: "Insight",
+    title: "A book that rewired how I think",
+    hook: "Day 7 / 30",
+    draft: "One book, one paragraph — completely shifted how I saw [topic]. I've read it three times now. Drop a 📚 if you want the title."
+  },
+  {
+    day: 8, tag: "story", tagLabel: "Story",
+    title: "The day I almost quit — and why I didn't",
+    hook: "Day 8 / 30",
+    draft: "There was a specific Tuesday afternoon when I was ready to walk away. This is what stopped me. [Your story in 3 lines]. Sometimes the almost-quit moments become the turning point."
+  },
+  {
+    day: 9, tag: "fun", tagLabel: "Fun",
+    title: "Things I believed at 22 that make me laugh now",
+    hook: "Day 9 / 30",
+    draft: "At 22 I thought: hustle 24/7 = success. Now I know: rest is strategy. What belief have you outgrown? 😄"
+  },
+  {
+    day: 10, tag: "lesson", tagLabel: "Lesson",
+    title: "10 days in — what I've learned about showing up",
+    hook: "Day 10 / 30",
+    draft: "10 posts. 10 days. Here's what I didn't expect: the hardest part isn't writing. It's starting. Every single day. The blank page doesn't get easier — you just get braver. 🔟"
+  },
+  {
+    day: 11, tag: "mindset", tagLabel: "Mindset",
+    title: "Why I stopped comparing my chapter 1 to someone's chapter 20",
+    hook: "Day 11 / 30",
+    draft: "Comparison is a trap. It compares your behind-the-scenes to everyone else's highlight reel. Run your own race. At your own pace."
+  },
+  {
+    day: 12, tag: "insight", tagLabel: "Insight",
+    title: "The most underrated skill nobody teaches you",
+    hook: "Day 12 / 30",
+    draft: "Listening. Not waiting-to-speak listening. Actually-absorbing-what-someone-said listening. It's rare. It's powerful. And it will take you further than most hard skills."
+  },
+  {
+    day: 13, tag: "people", tagLabel: "People",
+    title: "A conversation that changed my perspective on [topic]",
+    hook: "Day 13 / 30",
+    draft: "Over coffee, someone said something that took 3 days to fully hit me. [Insert the one-liner]. Some conversations are slow bombs. 💬"
+  },
+  {
+    day: 14, tag: "fun", tagLabel: "Fun",
+    title: "My most embarrassing 'confident but wrong' moment",
+    hook: "Day 14 / 30",
+    draft: "I once confidently explained [topic] in a room full of experts. I was very, very wrong. The silence that followed... I still feel it. 😅 Anyone else have a story like this?"
+  },
+  {
+    day: 15, tag: "story", tagLabel: "Story",
+    title: "Halfway there — the real story behind this challenge",
+    hook: "Day 15 / 30 🎯",
+    draft: "15 days ago I wasn't sure I'd make it here. Here's the honest truth about why I started this, what I hoped for, and what surprised me. [Your honest reflection]. Half the journey done."
+  },
+  {
+    day: 16, tag: "lesson", tagLabel: "Lesson",
+    title: "What working with [type of person] taught me about patience",
+    hook: "Day 16 / 30",
+    draft: "Not every collaboration is smooth. Some are sandpaper. But sandpaper smooths rough edges. The difficult ones taught me more than the easy ones ever did."
+  },
+  {
+    day: 17, tag: "mindset", tagLabel: "Mindset",
+    title: "The 2-word question I ask myself before every decision",
+    hook: "Day 17 / 30",
+    draft: "'So what?' — It sounds harsh but asking this before any decision clears the fog instantly. Does this actually matter? If yes — go. If no — let it go."
+  },
+  {
+    day: 18, tag: "insight", tagLabel: "Insight",
+    title: "Something I noticed about highly effective people",
+    hook: "Day 18 / 30",
+    draft: "The most effective people I've met don't manage time. They manage energy. They know when they're sharp and protect those hours fiercely."
+  },
+  {
+    day: 19, tag: "fun", tagLabel: "Fun",
+    title: "A place that unexpectedly gave me my best idea",
+    hook: "Day 19 / 30",
+    draft: "My best idea in the last year came to me at [unexpected place]. Not in a meeting. Not at my desk. Ideas don't care about office hours. 💡"
+  },
+  {
+    day: 20, tag: "people", tagLabel: "People",
+    title: "What I learned from someone who was nothing like me",
+    hook: "Day 20 / 30",
+    draft: "We disagreed on almost everything. But every conversation with them stretched my thinking. The most valuable people in your life aren't always the ones who agree with you."
+  },
+  {
+    day: 21, tag: "story", tagLabel: "Story",
+    title: "A risk I took that looked crazy — and paid off",
+    hook: "Day 21 / 30",
+    draft: "Everyone in the room thought it was a bad idea. I wasn't sure either. But it worked. Looking back, the risk wasn't the scary part — the regret of not trying would have been."
+  },
+  {
+    day: 22, tag: "lesson", tagLabel: "Lesson",
+    title: "Why I stopped trying to be consistent and started being intentional",
+    hook: "Day 22 / 30",
+    draft: "Consistency for its own sake burned me out. Now I ask: is this intentional? If the answer is yes — I show up. If not — I reconsider. Intention > Habit."
+  },
+  {
+    day: 23, tag: "mindset", tagLabel: "Mindset",
+    title: "The uncomfortable truth about comfort zones",
+    hook: "Day 23 / 30",
+    draft: "Your comfort zone isn't keeping you safe. It's keeping you still. There's a difference. Still water stagnates. Moving water stays alive."
+  },
+  {
+    day: 24, tag: "insight", tagLabel: "Insight",
+    title: "One thing I do differently now vs 2 years ago",
+    hook: "Day 24 / 30",
+    draft: "Two years ago: I said yes to everything. Now: I protect my no like it's currency. Because it is. Time is finite. 'No' to the wrong things is 'yes' to the right ones."
+  },
+  {
+    day: 25, tag: "fun", tagLabel: "Fun",
+    title: "The strangest feedback I ever received — and what I did with it",
+    hook: "Day 25 / 30",
+    draft: "Someone once told me I was 'too enthusiastic.' I thought about it for a week. Then I decided: that's my feature, not a bug. 😄 What's the strangest feedback you've gotten?"
+  },
+  {
+    day: 26, tag: "people", tagLabel: "People",
+    title: "To anyone starting out — here's what I wish someone told me",
+    hook: "Day 26 / 30",
+    draft: "You don't need to have it all figured out. You just need to take one honest step forward. The path gets clearer as you walk it — not before. To anyone at the start: keep going."
+  },
+  {
+    day: 27, tag: "story", tagLabel: "Story",
+    title: "The moment I realized what I actually want",
+    hook: "Day 27 / 30",
+    draft: "It wasn't a dramatic lightning bolt. It was quiet. A Tuesday afternoon. I was doing [activity] and something just clicked: this is it. Have you had that moment? When was it?"
+  },
+  {
+    day: 28, tag: "lesson", tagLabel: "Lesson",
+    title: "What this challenge taught me about discipline",
+    hook: "Day 28 / 30",
+    draft: "Discipline isn't motivation. Motivation comes and goes. Discipline is just showing up even when motivation left the chat. 28 days in. I know this now in my bones."
+  },
+  {
+    day: 29, tag: "mindset", tagLabel: "Mindset",
+    title: "One thing I want to leave behind — and one I'm carrying forward",
+    hook: "Day 29 / 30",
+    draft: "Leaving behind: perfectionism as procrastination. Carrying forward: the habit of showing up even when I don't feel ready. What are you shedding? What are you keeping?"
+  },
+  {
+    day: 30, tag: "story", tagLabel: "Story",
+    title: "30 days done — here's what actually happened",
+    hook: "Day 30 / 30 🎉",
+    draft: "30 posts. 30 seconds each. 30 days. I came here to share. I didn't expect to receive so much back. Here's what I learned — about writing, about people, about myself. Thank you for being here. What should I do next? 👇"
+  }
+];
+
+const tagColors = {
+  insight: "#1a6b8a",
+  story: "#7b3f00",
+  lesson: "#5c3d99",
+  fun: "#b5451b",
+  people: "#1a6b4a",
+  mindset: "#8a5a00"
+};
+
+function getStorage() {
+  try {
+    const raw = localStorage.getItem('linkedin30done');
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+
+function setStorage(data) {
+  try { localStorage.setItem('linkedin30done', JSON.stringify(data)); } catch(e) {}
+}
+
+function updateProgress() {
+  const done = getStorage();
+  const count = Object.values(done).filter(Boolean).length;
+  const pct = Math.round((count / 30) * 100);
+  document.getElementById('done-count').textContent = count;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+
+function renderCards(filter = 'all') {
+  const grid = document.getElementById('grid');
+  const done = getStorage();
+  grid.innerHTML = '';
+
+  posts
+    .filter(p => filter === 'all' || p.tag === filter)
+    .forEach(p => {
+      const isDone = done[p.day] || false;
+      const card = document.createElement('div');
+      card.className = 'card' + (isDone ? ' done' : '');
+      card.dataset.tag = p.tag;
+      card.innerHTML = `
+        <div class="card-top">
+          <span class="day-num">${String(p.day).padStart(2,'0')}</span>
+          <span class="tag tag-${p.tag}">${p.tagLabel}</span>
+        </div>
+        <div class="card-hook">${p.hook}</div>
+        <div class="card-title">${p.title}</div>
+        <div class="card-draft">${p.draft}</div>
+        <button class="done-toggle" onclick="toggleDone(${p.day}, event)" title="Mark as posted">${isDone ? '✓' : ''}</button>
+      `;
+      grid.appendChild(card);
+    });
+}
+
+function toggleDone(day, e) {
+  e.stopPropagation();
+  const done = getStorage();
+  done[day] = !done[day];
+  setStorage(done);
+  const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
+  renderCards(activeFilter);
+  updateProgress();
+}
+
+function filterCards(tag, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(tag);
+}
+
+renderCards();
+updateProgress();
+</script>
+</body>
+</html>
