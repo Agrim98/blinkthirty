@@ -741,6 +741,133 @@
     50% { opacity: 0.5; transform: scale(0.8); }
   }
 
+  /* CREATOR STRIP */
+  .creator-strip {
+    background: var(--ink);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 3px solid var(--accent);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle animated background shimmer */
+  .creator-strip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(232,57,14,0.03) 40px,
+      rgba(232,57,14,0.03) 41px
+    );
+    pointer-events: none;
+  }
+
+  .creator-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .creator-avatar {
+    width: 44px;
+    height: 44px;
+    background: var(--accent);
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+    position: relative;
+    animation: avatarPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes avatarPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,57,14,0); }
+    50% { box-shadow: 0 0 0 6px rgba(232,57,14,0.15); }
+  }
+
+  .creator-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .creator-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: white;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  .creator-tagline {
+    font-size: 11px;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.02em;
+  }
+
+  .creator-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.7);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
+    white-space: nowrap;
+  }
+
+  .creator-cta:hover {
+    background: #0a66c2;
+    border-color: #0a66c2;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(10,102,194,0.35);
+  }
+
+  /* WATERMARK */
+  .watermark {
+    background: #050505;
+    padding: 10px 40px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.08em;
+  }
+
+  .watermark a {
+    color: rgba(232,57,14,0.5);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .watermark a:hover { color: var(--accent); }
+
   @media (max-width: 600px) {
     .hero, .progress-wrap, .section-label { padding: 24px 20px; padding-bottom: 0; }
     .hero { padding-bottom: 24px; }
@@ -752,6 +879,8 @@
     .footer { padding: 24px 20px; }
     .footer-note { text-align: left; }
     .visit-strip { padding: 10px 20px; }
+    .creator-strip { padding: 16px 20px; }
+    .watermark { padding: 10px 20px; }
   }
 </style>
 </head>
@@ -837,6 +966,25 @@
 <div class="footer">
   <div class="footer-text">COME BACK<br><span>TOMORROW.</span></div>
   <p class="footer-note">A new post unlocks every day. Bookmark this page and watch the journey unfold. 🔖</p>
+</div>
+
+<!-- CREATOR STRIP -->
+<div class="creator-strip">
+  <div class="creator-left">
+    <div class="creator-info">
+      <span class="creator-name">Agrim Arora</span>
+      <span class="creator-tagline">Human behind the 30 seconds ✍️</span>
+    </div>
+  </div>
+  <a class="creator-cta" href="https://www.linkedin.com/in/agrim-arora/" target="_blank">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    LinkedIn
+  </a>
+</div>
+
+<!-- WATERMARK -->
+<div class="watermark">
+  <span>© blinkthirty · built by Agrim Arora · <a href="https://www.linkedin.com/in/agrim-arora/" target="_blank">agrim-arora</a></span>
 </div>
 
 <script>
