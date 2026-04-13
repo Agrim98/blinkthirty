@@ -357,32 +357,200 @@
   .tag-mindset { color: #5c3d99; }
   .tag-people { color: #1a6b4a; }
 
+  /* TAG LEGEND STRIP */
+  .tag-legend {
+    padding: 14px 40px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .legend-label {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+
+  .legend-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 0;
+    border: 1.5px solid currentColor;
+    white-space: nowrap;
+    transition: all 0.15s;
+    cursor: default;
+  }
+
+  .legend-pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  .legend-story   { color: #7b3f00; }
+  .legend-creative { color: #b5451b; }
+  .legend-lifestyle { color: #1a6b8a; }
+  .legend-mindset  { color: #5c3d99; }
+  .legend-people   { color: #1a6b4a; }
+
   /* SEASON 2 FINALE SCREEN */
   .season2-screen {
     display: none;
     position: fixed;
     inset: 0;
-    background: #000;
     z-index: 100;
+    overflow: hidden;
+  }
+  .season2-screen.visible { display: block; animation: fadeInS2 1.8s ease forwards; }
+  @keyframes fadeInS2 { from{opacity:0;} to{opacity:1;} }
+
+  /* Cinematic canvas background */
+  .s2-canvas { position:absolute; inset:0; width:100%; height:100%; }
+
+  /* Dark overlay gradient on top of canvas */
+  .s2-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.55) 0%,
+      rgba(0,0,0,0.15) 40%,
+      rgba(0,0,0,0.7) 75%,
+      rgba(0,0,0,0.92) 100%
+    );
+  }
+
+  /* Cinematic letterbox bars */
+  .s2-letterbox-top, .s2-letterbox-bottom {
+    position: absolute;
+    left: 0; right: 0;
+    height: 70px;
+    background: #000;
+    z-index: 2;
+  }
+  .s2-letterbox-top { top: 0; animation: slideDown 1s 0.3s both; }
+  .s2-letterbox-bottom { bottom: 0; animation: slideUp 1s 0.3s both; }
+  @keyframes slideDown { from{transform:translateY(-100%);} to{transform:translateY(0);} }
+  @keyframes slideUp { from{transform:translateY(100%);} to{transform:translateY(0);} }
+
+  /* Content */
+  .s2-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    padding: 90px 40px;
     text-align: center;
-    padding: 40px;
+    z-index: 3;
   }
-  .season2-screen.visible { display: flex; animation: fadeInS2 1.5s ease forwards; }
-  @keyframes fadeInS2 { from { opacity:0; } to { opacity:1; } }
-  .s2-eyebrow { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:#555; margin-bottom:20px; animation: riseUp 1s 0.5s both; }
-  .s2-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(60px,15vw,160px); color:white; line-height:0.9; animation: riseUp 1s 0.7s both; }
-  .s2-subtitle { font-family:'Bebas Neue',sans-serif; font-size:clamp(28px,6vw,64px); color:#e8390e; margin-top:8px; animation: riseUp 1s 0.9s both; }
-  .s2-body { font-size:15px; font-weight:300; color:#999; max-width:440px; line-height:1.7; margin-top:28px; font-style:italic; animation: riseUp 1s 1.1s both; }
-  .s2-depends { margin-top:16px; font-size:13px; font-weight:500; color:#c9a84c; letter-spacing:0.06em; animation: riseUp 1s 1.3s both; }
-  .s2-close { margin-top:40px; padding:12px 32px; border:1px solid #333; background:transparent; color:#555; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; animation: riseUp 1s 1.5s both; }
-  .s2-close:hover { border-color:white; color:white; }
-  .s2-stars { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
-  .s2-star { position:absolute; width:2px; height:2px; background:white; border-radius:50%; animation: twinkle var(--d,3s) var(--del,0s) infinite; opacity:0; }
+
+  .s2-season-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #e8390e;
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    margin-bottom: 14px;
+    animation: riseUp 1s 1s both;
+  }
+
+  .s2-tag-line {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 10px;
+    animation: riseUp 1s 1.1s both;
+  }
+
+  .s2-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(54px, 13vw, 140px);
+    color: white;
+    line-height: 0.88;
+    text-shadow: 0 4px 40px rgba(0,0,0,0.8);
+    animation: riseUp 1s 1.2s both;
+  }
+
+  .s2-subtitle {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(22px, 5vw, 52px);
+    color: #c9a84c;
+    margin-top: 10px;
+    letter-spacing: 0.06em;
+    animation: riseUp 1s 1.4s both;
+  }
+
+  .s2-divider {
+    width: 60px;
+    height: 1px;
+    background: rgba(255,255,255,0.25);
+    margin: 20px auto;
+    animation: riseUp 1s 1.5s both;
+  }
+
+  .s2-body {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.65);
+    max-width: 400px;
+    line-height: 1.75;
+    font-style: italic;
+    animation: riseUp 1s 1.6s both;
+  }
+
+  .s2-vote {
+    margin-top: 18px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #c9a84c;
+    letter-spacing: 0.06em;
+    animation: riseUp 1s 1.7s both;
+    line-height: 1.6;
+  }
+
+  .s2-close {
+    margin-top: 28px;
+    padding: 10px 28px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: rgba(255,255,255,0.4);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    animation: riseUp 1s 1.9s both;
+  }
+  .s2-close:hover { border-color: rgba(255,255,255,0.6); color: white; }
+
+  /* Stars */
+  .s2-stars { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:1; }
+  .s2-star { position:absolute; border-radius:50%; background:white; animation: twinkle var(--d,3s) var(--del,0s) infinite; opacity:0; }
   @keyframes twinkle { 0%,100%{opacity:0;} 50%{opacity:var(--op,0.5);} }
-  @keyframes riseUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes riseUp { from{opacity:0;transform:translateY(24px);} to{opacity:1;transform:translateY(0);} }
 
   .card-title {
     font-size: 15px;
@@ -490,6 +658,7 @@
     .hero { padding-bottom: 24px; }
     .progress-wrap { padding-bottom: 20px; }
     .today-banner { margin: 16px 20px 0; padding: 16px; }
+    .tag-legend { padding: 12px 20px; gap: 8px; }
     .grid { margin: 0 0 20px; border-left: none; border-right: none; }
     .section-label { padding: 20px 20px 8px; }
     .footer { padding: 24px 20px; }
@@ -535,6 +704,16 @@
   <span class="progress-pct" id="progress-pct">0%</span>
 </div>
 
+<!-- TAG LEGEND -->
+<div class="tag-legend">
+  <span class="legend-label">Categories →</span>
+  <span class="legend-pill legend-story"><span class="dot"></span>Story</span>
+  <span class="legend-pill legend-creative"><span class="dot"></span>Creative</span>
+  <span class="legend-pill legend-lifestyle"><span class="dot"></span>Lifestyle</span>
+  <span class="legend-pill legend-mindset"><span class="dot"></span>Mindset</span>
+  <span class="legend-pill legend-people"><span class="dot"></span>People</span>
+</div>
+
 <!-- TODAY'S POST SPOTLIGHT -->
 <div class="today-banner" id="today-banner"></div>
 
@@ -544,13 +723,26 @@
 
 <!-- SEASON 2 SCREEN (shows on Day 30) -->
 <div class="season2-screen" id="season2">
+  <!-- Animated canvas background -->
+  <canvas class="s2-canvas" id="s2-canvas"></canvas>
+  <!-- Dark cinematic overlay -->
+  <div class="s2-overlay"></div>
+  <!-- Stars -->
   <div class="s2-stars" id="s2-stars"></div>
-  <div class="s2-eyebrow">Season 1 — Complete</div>
-  <div class="s2-title">THAT'S A<br>WRAP.</div>
-  <div class="s2-subtitle">Season 2 Loading...</div>
-  <p class="s2-body">30 days. 30 seconds. One creative bet that paid off. Thank you for watching every single day — you made this worth it.</p>
-  <p class="s2-depends">⚡ Season 2 depends on Season 1's performance.<br>Drop a 🎬 on LinkedIn to vote YES.</p>
-  <button class="s2-close" onclick="document.getElementById('season2').classList.remove('visible')">← Back to Season 1</button>
+  <!-- Letterbox bars -->
+  <div class="s2-letterbox-top"></div>
+  <div class="s2-letterbox-bottom"></div>
+  <!-- Main content -->
+  <div class="s2-content">
+    <div class="s2-season-badge">🎬 Season 1 · Complete</div>
+    <div class="s2-tag-line">30 Days &nbsp;·&nbsp; 30 Seconds &nbsp;·&nbsp; 1 Creative Bet</div>
+    <div class="s2-title">THAT'S<br>A WRAP.</div>
+    <div class="s2-subtitle">⚡ Season 2 Loading...</div>
+    <div class="s2-divider"></div>
+    <p class="s2-body">You showed up. I showed up. 30 days of creativity, delivered in 30 seconds each. This is what happens when humans lead and AI assists — not the other way around.</p>
+    <p class="s2-vote">Season 2 depends on Season 1's performance.<br>Drop a 🎬 on LinkedIn if you want more.</p>
+    <button class="s2-close" onclick="document.getElementById('season2').classList.remove('visible')">← Back to Season 1</button>
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -808,9 +1000,9 @@ const pct = Math.round((CURRENT_DAY / 30) * 100);
 document.getElementById('progress-fill').style.width = pct + '%';
 document.getElementById('progress-pct').textContent = pct + '%';
 
-// LOCKED GRID (days AFTER current)
+// LOCKED GRID — days AFTER current, but Day 30 is EXCLUDED (it gets the Season 2 screen instead)
 const grid = document.getElementById('grid');
-const futurePosts = posts.filter(p => p.day > CURRENT_DAY);
+const futurePosts = posts.filter(p => p.day > CURRENT_DAY && p.day < 30);
 
 futurePosts.forEach((p, i) => {
   const funny = funnyMessages[i % funnyMessages.length];
@@ -827,35 +1019,166 @@ futurePosts.forEach((p, i) => {
   grid.appendChild(card);
 });
 
-// Update section label
-if (CURRENT_DAY < 30) {
-  document.querySelector('.section-label').textContent =
-    `📅 Coming Soon — Days ${CURRENT_DAY + 1} to 30`;
+// Section label
+if (CURRENT_DAY === 30) {
+  document.querySelector('.section-label').style.display = 'none';
+  document.getElementById('grid').style.display = 'none';
+} else if (CURRENT_DAY === 29) {
+  document.querySelector('.section-label').style.display = 'none';
+  document.getElementById('grid').style.display = 'none';
 } else {
-  document.querySelector('.section-label').textContent = `🎬 Season 1 — All 30 Days Complete`;
+  document.querySelector('.section-label').textContent =
+    `📅 Coming Soon — Days ${CURRENT_DAY + 1} to 29`;
 }
 
 // SEASON 2 — trigger on Day 30
 if (CURRENT_DAY === 30) {
   setTimeout(() => {
     document.getElementById('season2').classList.add('visible');
-    // Generate stars
+
+    // ── Stars ──
     const starsEl = document.getElementById('s2-stars');
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 100; i++) {
       const star = document.createElement('div');
       star.className = 's2-star';
+      const size = Math.random() > 0.85 ? 3 : Math.random() > 0.6 ? 2 : 1;
       star.style.cssText = `
-        left: ${Math.random()*100}%;
-        top: ${Math.random()*100}%;
-        --d: ${2 + Math.random()*4}s;
-        --del: ${Math.random()*3}s;
-        --op: ${0.3 + Math.random()*0.7};
-        width: ${Math.random() > 0.8 ? 3 : 2}px;
-        height: ${Math.random() > 0.8 ? 3 : 2}px;
+        left:${Math.random()*100}%;
+        top:${Math.random()*100}%;
+        width:${size}px; height:${size}px;
+        --d:${2+Math.random()*5}s;
+        --del:${Math.random()*4}s;
+        --op:${0.3+Math.random()*0.7};
       `;
       starsEl.appendChild(star);
     }
-  }, 800);
+
+    // ── Canvas: cinematic city/road at dusk ──
+    const canvas = document.getElementById('s2-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, t = 0;
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function drawScene() {
+      ctx.clearRect(0, 0, W, H);
+
+      // Sky gradient — deep dusk
+      const sky = ctx.createLinearGradient(0, 0, 0, H * 0.65);
+      sky.addColorStop(0, '#05050f');
+      sky.addColorStop(0.4, '#0d0820');
+      sky.addColorStop(0.7, '#1a0a18');
+      sky.addColorStop(1, '#2d1208');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, W, H * 0.65);
+
+      // Horizon glow — amber/red
+      const glow = ctx.createRadialGradient(W/2, H*0.62, 0, W/2, H*0.62, W*0.6);
+      glow.addColorStop(0, 'rgba(232,57,14,0.35)');
+      glow.addColorStop(0.4, 'rgba(201,168,76,0.12)');
+      glow.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, W, H * 0.68);
+
+      // Ground
+      const ground = ctx.createLinearGradient(0, H*0.62, 0, H);
+      ground.addColorStop(0, '#0e0608');
+      ground.addColorStop(1, '#020202');
+      ctx.fillStyle = ground;
+      ctx.fillRect(0, H*0.62, W, H*0.38);
+
+      // Road perspective
+      const roadW = W * 0.22;
+      const vp = { x: W/2, y: H * 0.615 };
+      ctx.beginPath();
+      ctx.moveTo(vp.x - roadW/2, vp.y);
+      ctx.lineTo(vp.x + roadW/2, vp.y);
+      ctx.lineTo(W * 0.85, H);
+      ctx.lineTo(W * 0.15, H);
+      ctx.closePath();
+      const roadG = ctx.createLinearGradient(0, vp.y, 0, H);
+      roadG.addColorStop(0, '#151010');
+      roadG.addColorStop(1, '#0a0808');
+      ctx.fillStyle = roadG;
+      ctx.fill();
+
+      // Road center dashes — moving
+      const dashCount = 8;
+      for (let i = 0; i < dashCount; i++) {
+        const prog = ((i / dashCount) + t * 0.18) % 1;
+        const y = vp.y + (H - vp.y) * prog;
+        const scale = prog;
+        const w = 4 * scale;
+        const h2 = 18 * scale;
+        ctx.fillStyle = `rgba(201,168,76,${0.15 + scale * 0.35})`;
+        ctx.fillRect(W/2 - w/2, y - h2/2, w, h2);
+      }
+
+      // City silhouette
+      const buildings = [
+        [0.08, 0.52, 0.06, 0.12],
+        [0.14, 0.46, 0.05, 0.17],
+        [0.19, 0.50, 0.04, 0.13],
+        [0.23, 0.44, 0.07, 0.19],
+        [0.30, 0.49, 0.05, 0.14],
+        [0.35, 0.42, 0.06, 0.21],
+        [0.41, 0.47, 0.04, 0.16],
+        [0.57, 0.47, 0.04, 0.16],
+        [0.61, 0.42, 0.06, 0.21],
+        [0.67, 0.49, 0.05, 0.14],
+        [0.72, 0.44, 0.07, 0.19],
+        [0.79, 0.50, 0.04, 0.13],
+        [0.83, 0.46, 0.05, 0.17],
+        [0.88, 0.52, 0.06, 0.12],
+      ];
+
+      buildings.forEach(([x, y, w, h2]) => {
+        const bx = x * W, by = y * H, bw = w * W, bh = h2 * H;
+        ctx.fillStyle = '#0a0508';
+        ctx.fillRect(bx, by, bw, bh);
+        // Windows
+        const cols = Math.floor(bw / 9);
+        const rows = Math.floor(bh / 11);
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const lit = Math.sin(t*0.5 + r*3.7 + c*2.1 + bx) > 0.3;
+            if (lit) {
+              const wx = bx + c * 9 + 2, wy = by + r * 11 + 2;
+              ctx.fillStyle = `rgba(255,220,120,${0.3 + Math.sin(t+r+c)*0.2})`;
+              ctx.fillRect(wx, wy, 5, 6);
+            }
+          }
+        }
+      });
+
+      // Bokeh light orbs — blurred headlights/particles
+      const orbs = [
+        [0.3, 0.72, 18, 'rgba(232,57,14,0.08)'],
+        [0.65, 0.80, 24, 'rgba(201,168,76,0.07)'],
+        [0.5, 0.68, 14, 'rgba(255,200,100,0.06)'],
+        [0.2, 0.85, 30, 'rgba(232,57,14,0.05)'],
+        [0.78, 0.75, 20, 'rgba(201,168,76,0.06)'],
+      ];
+      orbs.forEach(([ox, oy, r, col]) => {
+        const grd = ctx.createRadialGradient(ox*W, oy*H, 0, ox*W, oy*H, r);
+        grd.addColorStop(0, col);
+        grd.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.arc(ox*W, oy*H, r, 0, Math.PI*2);
+        ctx.fill();
+      });
+
+      t += 0.012;
+      requestAnimationFrame(drawScene);
+    }
+    drawScene();
+  }, 600);
 }
 </script>
 </body>
