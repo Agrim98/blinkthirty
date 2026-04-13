@@ -351,12 +351,38 @@
     white-space: nowrap;
   }
 
-  .tag-insight { color: #1a6b8a; }
   .tag-story { color: #7b3f00; }
-  .tag-lesson { color: #5c3d99; }
-  .tag-fun { color: #b5451b; }
+  .tag-creative { color: #b5451b; }
+  .tag-lifestyle { color: #1a6b8a; }
+  .tag-mindset { color: #5c3d99; }
   .tag-people { color: #1a6b4a; }
-  .tag-mindset { color: #8a5a00; }
+
+  /* SEASON 2 FINALE SCREEN */
+  .season2-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+  .season2-screen.visible { display: flex; animation: fadeInS2 1.5s ease forwards; }
+  @keyframes fadeInS2 { from { opacity:0; } to { opacity:1; } }
+  .s2-eyebrow { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:#555; margin-bottom:20px; animation: riseUp 1s 0.5s both; }
+  .s2-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(60px,15vw,160px); color:white; line-height:0.9; animation: riseUp 1s 0.7s both; }
+  .s2-subtitle { font-family:'Bebas Neue',sans-serif; font-size:clamp(28px,6vw,64px); color:#e8390e; margin-top:8px; animation: riseUp 1s 0.9s both; }
+  .s2-body { font-size:15px; font-weight:300; color:#999; max-width:440px; line-height:1.7; margin-top:28px; font-style:italic; animation: riseUp 1s 1.1s both; }
+  .s2-depends { margin-top:16px; font-size:13px; font-weight:500; color:#c9a84c; letter-spacing:0.06em; animation: riseUp 1s 1.3s both; }
+  .s2-close { margin-top:40px; padding:12px 32px; border:1px solid #333; background:transparent; color:#555; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; animation: riseUp 1s 1.5s both; }
+  .s2-close:hover { border-color:white; color:white; }
+  .s2-stars { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+  .s2-star { position:absolute; width:2px; height:2px; background:white; border-radius:50%; animation: twinkle var(--d,3s) var(--del,0s) infinite; opacity:0; }
+  @keyframes twinkle { 0%,100%{opacity:0;} 50%{opacity:var(--op,0.5);} }
+  @keyframes riseUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
 
   .card-title {
     font-size: 15px;
@@ -516,6 +542,17 @@
 <div class="section-label">📅 Coming Soon — Days 2 to 30</div>
 <div class="grid" id="grid"></div>
 
+<!-- SEASON 2 SCREEN (shows on Day 30) -->
+<div class="season2-screen" id="season2">
+  <div class="s2-stars" id="s2-stars"></div>
+  <div class="s2-eyebrow">Season 1 — Complete</div>
+  <div class="s2-title">THAT'S A<br>WRAP.</div>
+  <div class="s2-subtitle">Season 2 Loading...</div>
+  <p class="s2-body">30 days. 30 seconds. One creative bet that paid off. Thank you for watching every single day — you made this worth it.</p>
+  <p class="s2-depends">⚡ Season 2 depends on Season 1's performance.<br>Drop a 🎬 on LinkedIn to vote YES.</p>
+  <button class="s2-close" onclick="document.getElementById('season2').classList.remove('visible')">← Back to Season 1</button>
+</div>
+
 <!-- FOOTER -->
 <div class="footer">
   <div class="footer-text">COME BACK<br><span>TOMORROW.</span></div>
@@ -529,30 +566,31 @@
 const CURRENT_DAY = 1;
 
 // ─── POST DATA ───────────────────────────────────────────
+// TAG DEFINITIONS: story | creative | lifestyle | mindset | people
 const posts = [
   {
     day: 1, tag: "story", tagLabel: "Story",
-    title: "Why I'm starting this 30-day challenge",
+    title: "Why I let AI do the backend & I'll do the creative",
     hook: "Day 1 / 30",
-    draft: "I've watched people write blogs, record podcasts, share thoughts for years. Today I stop watching. Here's my bet: 30 seconds of your time, 30 days straight. Let's see what happens. 🚀 #30Days30Seconds"
+    draft: "I've watched people write blogs, record podcasts, share thoughts for years. Today I ask AI to summarize — so don't you think, let AI do the backend part and time for me to be creative. Here's my bet: 30 seconds of your time, 30 days straight of creativity. Let's see what happens. 🚀 #30Days30Seconds"
   },
   {
-    day: 2, tag: "insight", tagLabel: "Insight",
-    title: "The one habit that changed my mornings",
+    day: 2, tag: "lifestyle", tagLabel: "Lifestyle",
+    title: "The one habit that quietly changed my mornings",
     hook: "Day 2 / 30",
     draft: "I used to check my phone first thing. Now I don't touch it for 30 minutes. My mornings got 10x calmer. Small shift. Massive difference. What's your morning ritual?"
   },
   {
-    day: 3, tag: "lesson", tagLabel: "Lesson",
+    day: 3, tag: "mindset", tagLabel: "Mindset",
     title: "The best advice I ignored — then wished I hadn't",
     hook: "Day 3 / 30",
     draft: "Someone once told me: 'Done is better than perfect.' I laughed. Then I spent 3 months perfecting something no one ever saw. Lesson learned the hard way."
   },
   {
-    day: 4, tag: "fun", tagLabel: "Fun",
-    title: "A weird thing I noticed about how I work best",
+    day: 4, tag: "creative", tagLabel: "Creative",
+    title: "Where I actually get my best ideas (hint: not my desk)",
     hook: "Day 4 / 30",
-    draft: "Turns out I do my best thinking in the shower, on walks, and weirdly… in traffic. Nowhere near my desk. Anyone else relate? 😂"
+    draft: "Turns out I do my best thinking in the shower, on walks, and weirdly… in traffic. Nowhere near my desk. Creativity doesn't clock in. Anyone else relate? 😂"
   },
   {
     day: 5, tag: "people", tagLabel: "People",
@@ -564,29 +602,29 @@ const posts = [
     day: 6, tag: "mindset", tagLabel: "Mindset",
     title: "What 'failure' actually taught me",
     hook: "Day 6 / 30",
-    draft: "My biggest failure wasn't a dead end. It was a detour with a better view. I just couldn't see it while I was in it."
+    draft: "My biggest failure wasn't a dead end. It was a detour with a better view. I just couldn't see it while I was in it. What has failure quietly taught you?"
   },
   {
-    day: 7, tag: "insight", tagLabel: "Insight",
-    title: "A book that rewired how I think",
+    day: 7, tag: "creative", tagLabel: "Creative",
+    title: "A book that rewired how I think about creativity",
     hook: "Day 7 / 30",
-    draft: "One book, one paragraph — completely shifted how I saw things. I've read it three times now. Drop a 📚 if you want the title."
+    draft: "One book, one paragraph — completely shifted how I saw the creative process. I've read it three times now. Drop a 📚 if you want the title."
   },
   {
     day: 8, tag: "story", tagLabel: "Story",
     title: "The day I almost quit — and why I didn't",
     hook: "Day 8 / 30",
-    draft: "There was a specific Tuesday afternoon when I was ready to walk away. Sometimes the almost-quit moments become the turning point."
+    draft: "There was a specific Tuesday afternoon when I was ready to walk away from everything. Sometimes the almost-quit moments become the actual turning point."
   },
   {
-    day: 9, tag: "fun", tagLabel: "Fun",
+    day: 9, tag: "lifestyle", tagLabel: "Lifestyle",
     title: "Things I believed at 22 that make me laugh now",
     hook: "Day 9 / 30",
-    draft: "At 22 I thought: hustle 24/7 = success. Now I know: rest is strategy. What belief have you outgrown? 😄"
+    draft: "At 22 I thought: hustle 24/7 = success. Now I know: rest is strategy. Protect your energy like it's your most valuable asset. What belief have you outgrown? 😄"
   },
   {
-    day: 10, tag: "lesson", tagLabel: "Lesson",
-    title: "10 days in — what I've learned about showing up",
+    day: 10, tag: "story", tagLabel: "Story",
+    title: "10 days in — what showing up daily actually feels like",
     hook: "Day 10 / 30",
     draft: "10 posts. 10 days. The hardest part isn't writing. It's starting. Every. Single. Day. The blank page doesn't get easier — you just get braver. 🔟"
   },
@@ -597,34 +635,34 @@ const posts = [
     draft: "Comparison is a trap. It compares your behind-the-scenes to everyone else's highlight reel. Run your own race. At your own pace."
   },
   {
-    day: 12, tag: "insight", tagLabel: "Insight",
+    day: 12, tag: "people", tagLabel: "People",
     title: "The most underrated skill nobody teaches you",
     hook: "Day 12 / 30",
-    draft: "Listening. Not waiting-to-speak listening. Actually-absorbing-what-someone-said listening. It's rare. It's powerful."
+    draft: "Listening. Not waiting-to-speak listening. Actually-absorbing-what-someone-said listening. It's rare. It's powerful. And it will take you further than most hard skills."
   },
   {
     day: 13, tag: "people", tagLabel: "People",
     title: "A conversation that changed my perspective",
     hook: "Day 13 / 30",
-    draft: "Over coffee, someone said something that took 3 days to fully hit me. Some conversations are slow bombs. 💬"
+    draft: "Over coffee, someone said something that took 3 days to fully hit me. Some conversations are slow bombs. 💬 Ever had one of those?"
   },
   {
-    day: 14, tag: "fun", tagLabel: "Fun",
-    title: "My most embarrassing 'confident but wrong' moment",
+    day: 14, tag: "lifestyle", tagLabel: "Lifestyle",
+    title: "My most embarrassing 'confident but completely wrong' moment",
     hook: "Day 14 / 30",
-    draft: "I once confidently explained something in a room full of experts. I was very, very wrong. The silence that followed... I still feel it. 😅"
+    draft: "I once confidently explained something in a room full of experts. I was very, very wrong. The silence that followed... I still feel it. 😅 Anyone else?"
   },
   {
     day: 15, tag: "story", tagLabel: "Story",
-    title: "Halfway there — the real story behind this challenge",
+    title: "Halfway there — the real honest story behind this challenge",
     hook: "Day 15 / 30 🎯",
-    draft: "15 days ago I wasn't sure I'd make it here. Here's the honest truth about why I started this, what I hoped for, and what surprised me."
+    draft: "15 days ago I wasn't sure I'd make it here. Here's the honest truth about why I started, what I hoped for, and what completely surprised me."
   },
   {
-    day: 16, tag: "lesson", tagLabel: "Lesson",
+    day: 16, tag: "people", tagLabel: "People",
     title: "What a difficult collaboration taught me about patience",
     hook: "Day 16 / 30",
-    draft: "Not every collaboration is smooth. Some are sandpaper. But sandpaper smooths rough edges. The difficult ones taught me more than the easy ones ever did."
+    draft: "Not every collaboration is smooth. Some are sandpaper. But sandpaper smooths rough edges. The difficult people taught me more than the easy ones ever did."
   },
   {
     day: 17, tag: "mindset", tagLabel: "Mindset",
@@ -633,13 +671,13 @@ const posts = [
     draft: "'So what?' — It sounds harsh but asking this before any decision clears the fog instantly. Does this actually matter? If yes — go. If no — let it go."
   },
   {
-    day: 18, tag: "insight", tagLabel: "Insight",
-    title: "Something I noticed about highly effective people",
+    day: 18, tag: "creative", tagLabel: "Creative",
+    title: "How I use AI without losing my creative voice",
     hook: "Day 18 / 30",
-    draft: "The most effective people I've met don't manage time. They manage energy. They know when they're sharp and protect those hours fiercely."
+    draft: "AI is my research assistant, my first draft editor, my sounding board. But the idea? The angle? The soul of it? That's still mine. Tools amplify creativity — they don't replace it."
   },
   {
-    day: 19, tag: "fun", tagLabel: "Fun",
+    day: 19, tag: "lifestyle", tagLabel: "Lifestyle",
     title: "A place that unexpectedly gave me my best idea",
     hook: "Day 19 / 30",
     draft: "My best idea in the last year came to me somewhere completely unexpected. Not in a meeting. Not at my desk. Ideas don't care about office hours. 💡"
@@ -648,7 +686,7 @@ const posts = [
     day: 20, tag: "people", tagLabel: "People",
     title: "What I learned from someone who was nothing like me",
     hook: "Day 20 / 30",
-    draft: "We disagreed on almost everything. But every conversation stretched my thinking. The most valuable people aren't always the ones who agree with you."
+    draft: "We disagreed on almost everything. But every conversation stretched my thinking. The most valuable people in your life aren't always the ones who agree with you."
   },
   {
     day: 21, tag: "story", tagLabel: "Story",
@@ -657,58 +695,58 @@ const posts = [
     draft: "Everyone in the room thought it was a bad idea. I wasn't sure either. But it worked. The risk wasn't the scary part — the regret of not trying would have been."
   },
   {
-    day: 22, tag: "lesson", tagLabel: "Lesson",
+    day: 22, tag: "mindset", tagLabel: "Mindset",
     title: "Why I stopped being consistent and started being intentional",
     hook: "Day 22 / 30",
-    draft: "Consistency for its own sake burned me out. Now I ask: is this intentional? If yes — I show up. If not — I reconsider. Intention > Habit."
+    draft: "Consistency for its own sake burned me out. Now I ask: is this intentional? If yes — I show up. If not — I reconsider. Intention > Habit. Always."
   },
   {
-    day: 23, tag: "mindset", tagLabel: "Mindset",
-    title: "The uncomfortable truth about comfort zones",
+    day: 23, tag: "creative", tagLabel: "Creative",
+    title: "The creative block nobody talks about honestly",
     hook: "Day 23 / 30",
-    draft: "Your comfort zone isn't keeping you safe. It's keeping you still. Still water stagnates. Moving water stays alive."
+    draft: "It's not running out of ideas. It's the fear that your ideas aren't good enough. That's the real block. The cure? Ship the imperfect one. The next idea always follows."
   },
   {
-    day: 24, tag: "insight", tagLabel: "Insight",
+    day: 24, tag: "lifestyle", tagLabel: "Lifestyle",
     title: "One thing I do differently now vs 2 years ago",
     hook: "Day 24 / 30",
     draft: "Two years ago I said yes to everything. Now I protect my no like it's currency. Because it is. 'No' to the wrong things is 'yes' to the right ones."
   },
   {
-    day: 25, tag: "fun", tagLabel: "Fun",
+    day: 25, tag: "lifestyle", tagLabel: "Lifestyle",
     title: "The strangest feedback I ever received",
     hook: "Day 25 / 30",
-    draft: "Someone once told me I was 'too enthusiastic.' I thought about it for a week. Then decided: that's my feature, not a bug. 😄"
+    draft: "Someone once told me I was 'too enthusiastic.' I thought about it for a week. Then decided: that's my feature, not a bug. Own your weird. 😄"
   },
   {
     day: 26, tag: "people", tagLabel: "People",
     title: "To anyone starting out — here's what I wish someone told me",
     hook: "Day 26 / 30",
-    draft: "You don't need to have it all figured out. The path gets clearer as you walk it — not before. To anyone at the start: keep going."
+    draft: "You don't need to have it all figured out. Just take one honest step forward. The path gets clearer as you walk it — not before. To anyone at the start: keep going."
   },
   {
     day: 27, tag: "story", tagLabel: "Story",
     title: "The moment I realized what I actually want",
     hook: "Day 27 / 30",
-    draft: "It wasn't a dramatic lightning bolt. It was quiet. Something just clicked. Have you had that moment? When was it?"
+    draft: "It wasn't a dramatic lightning bolt. It was quiet. A regular afternoon. Something just clicked. Have you had that moment? When was it for you?"
   },
   {
-    day: 28, tag: "lesson", tagLabel: "Lesson",
-    title: "What this challenge taught me about discipline",
+    day: 28, tag: "mindset", tagLabel: "Mindset",
+    title: "What 30 days of showing up taught me about discipline",
     hook: "Day 28 / 30",
-    draft: "Discipline isn't motivation. Motivation comes and goes. Discipline is showing up even when motivation left the chat. 28 days in. I know this in my bones."
+    draft: "Discipline isn't motivation. Motivation comes and goes. Discipline is just showing up even when motivation left the chat. 28 days in — I know this in my bones now."
   },
   {
-    day: 29, tag: "mindset", tagLabel: "Mindset",
-    title: "One thing I'm leaving behind — and one I'm carrying forward",
+    day: 29, tag: "creative", tagLabel: "Creative",
+    title: "One thing I'm leaving behind — one I'm carrying into Season 2",
     hook: "Day 29 / 30",
-    draft: "Leaving behind: perfectionism as procrastination. Carrying forward: showing up even when I don't feel ready. What are you shedding? What are you keeping?"
+    draft: "Leaving behind: perfectionism as procrastination. Carrying forward: the creative muscle I've built by showing up daily. What are you shedding? What are you keeping?"
   },
   {
     day: 30, tag: "story", tagLabel: "Story",
-    title: "30 days done — here's what actually happened",
-    hook: "Day 30 / 30 🎉",
-    draft: "30 posts. 30 seconds each. 30 days. I came here to share. I didn't expect to receive so much back. Thank you for being here. What should I do next? 👇"
+    title: "Season 1 — done. Here's what actually happened.",
+    hook: "Day 30 / 30 🎬",
+    draft: "30 posts. 30 seconds. 30 days. I came here to share a little. I didn't expect to learn a lot. Whether Season 2 happens depends on you — did this 30 seconds matter? Drop a 🎬 if it did. Thank you for watching Season 1. 👇"
   }
 ];
 
@@ -790,8 +828,35 @@ futurePosts.forEach((p, i) => {
 });
 
 // Update section label
-document.querySelector('.section-label').textContent =
-  `📅 Coming Soon — Days ${CURRENT_DAY + 1} to 30`;
+if (CURRENT_DAY < 30) {
+  document.querySelector('.section-label').textContent =
+    `📅 Coming Soon — Days ${CURRENT_DAY + 1} to 30`;
+} else {
+  document.querySelector('.section-label').textContent = `🎬 Season 1 — All 30 Days Complete`;
+}
+
+// SEASON 2 — trigger on Day 30
+if (CURRENT_DAY === 30) {
+  setTimeout(() => {
+    document.getElementById('season2').classList.add('visible');
+    // Generate stars
+    const starsEl = document.getElementById('s2-stars');
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement('div');
+      star.className = 's2-star';
+      star.style.cssText = `
+        left: ${Math.random()*100}%;
+        top: ${Math.random()*100}%;
+        --d: ${2 + Math.random()*4}s;
+        --del: ${Math.random()*3}s;
+        --op: ${0.3 + Math.random()*0.7};
+        width: ${Math.random() > 0.8 ? 3 : 2}px;
+        height: ${Math.random() > 0.8 ? 3 : 2}px;
+      `;
+      starsEl.appendChild(star);
+    }
+  }, 800);
+}
 </script>
 </body>
 </html>
