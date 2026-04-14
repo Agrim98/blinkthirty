@@ -346,18 +346,7 @@
 
   .card.done { background: #f0f7f4; }
 
-  .card.done::after {
-    content: '✓ POSTED';
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    color: var(--done);
-    border: 1px solid var(--done);
-    padding: 2px 6px;
-  }
+  /* POSTED badge now rendered inline in JS, not via ::after */
 
   /* LOCKED CARD */
   .card.locked {
@@ -991,7 +980,7 @@
 // ─── CONFIG ──────────────────────────────────────────────
 // Change CURRENT_DAY to 2, 3, 4... each day you post.
 // That day becomes the spotlight. Previous days show as "Posted". Future days stay locked.
-const CURRENT_DAY = 1;
+const CURRENT_DAY = 2;
 
 // ─── POST DATA ───────────────────────────────────────────
 // TAG DEFINITIONS: story | creative | lifestyle | mindset | people
@@ -1003,10 +992,10 @@ const posts = [
     draft: "I've watched people write blogs, record podcasts, share thoughts for years. Today I ask AI to summarize — so don't you think, let AI do the backend part and time for me to be creative. Here's my bet: 30 seconds of your time, 30 days straight of creativity. Let's see what happens. 🚀 #30Days30Seconds"
   },
   {
-    day: 2, tag: "lifestyle", tagLabel: "Lifestyle",
-    title: "The one habit that quietly changed my mornings",
+    day: 2, tag: "creative", tagLabel: "Creative",
+    title: "Stop picking AI tools. Start picking goals.",
     hook: "Day 2 / 30",
-    draft: "I used to check my phone first thing. Now I don't touch it for 30 minutes. My mornings got 10x calmer. Small shift. Massive difference. What's your morning ritual?"
+    draft: "Everyone's debating: ChatGPT vs Gemini vs Claude vs Copilot. Meanwhile I asked myself one question — what am I actually trying to solve? I spent 2 hrs comparing tools last month. Wasted. Then spent 20 mins defining my goal. Built blinkthirty in a weekend. Same tools, different mindset. 2 hrs of comparison → 0 output. 20 mins of clarity → 30-day challenge live. Don't optimise the tool. Optimise the goal. 🎯 #30Days30Seconds"
   },
   {
     day: 3, tag: "mindset", tagLabel: "Mindset",
@@ -1236,10 +1225,31 @@ const pct = Math.round((CURRENT_DAY / 30) * 100);
 document.getElementById('progress-fill').style.width = pct + '%';
 document.getElementById('progress-pct').textContent = pct + '%';
 
-// LOCKED GRID — days AFTER current, but Day 30 is EXCLUDED (it gets the Season 2 screen instead)
+// GRID — past days (posted) + future days (locked), Day 30 excluded (Season 2 screen)
 const grid = document.getElementById('grid');
-const futurePosts = posts.filter(p => p.day > CURRENT_DAY && p.day < 30);
 
+// Past days — show as posted cards (all days before current)
+const pastPosts = posts.filter(p => p.day < CURRENT_DAY);
+pastPosts.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'card done';
+  card.innerHTML = `
+    <div class="card-top">
+      <span class="day-num">${String(p.day).padStart(2,'0')}</span>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--done);border:1px solid var(--done);padding:2px 7px;">✓ POSTED</span>
+        <span class="tag tag-${p.tag}">${p.tagLabel}</span>
+      </div>
+    </div>
+    <div class="card-hook">${p.hook}</div>
+    <div class="card-title">${p.title}</div>
+    <div class="card-draft">${p.draft}</div>
+  `;
+  grid.appendChild(card);
+});
+
+// Future days — locked
+const futurePosts = posts.filter(p => p.day > CURRENT_DAY && p.day < 30);
 futurePosts.forEach((p, i) => {
   const funny = funnyMessages[i % funnyMessages.length];
   const card = document.createElement('div');
@@ -1278,11 +1288,15 @@ grid.appendChild(s2card);
 // Section label + grid visibility
 const sectionLabel = document.querySelector('.section-label');
 const gridEl = document.getElementById('grid');
-if (futurePosts.length === 0) {
+const totalCards = pastPosts.length + futurePosts.length + 1; // +1 for S2 card
+if (totalCards <= 1) {
   sectionLabel.style.display = 'none';
   gridEl.style.display = 'none';
 } else {
-  sectionLabel.textContent = `📅 Coming Soon — Days ${CURRENT_DAY + 1} to 29`;
+  const parts = [];
+  if (pastPosts.length > 0) parts.push(`✅ ${pastPosts.length} Posted`);
+  if (futurePosts.length > 0) parts.push(`🔒 Days ${CURRENT_DAY + 1}–29 Coming`);
+  sectionLabel.textContent = parts.join('  ·  ');
 }
 
 // SEASON 2 — trigger on Day 30
