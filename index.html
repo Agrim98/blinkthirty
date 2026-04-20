@@ -1008,194 +1008,34 @@
 // Change CURRENT_DAY to 2, 3, 4... each day you post.
 // That day becomes the spotlight. Previous days show as "Posted". Future days stay locked.
 <!-- DAILY_START -->
-<!-- Updated: Monday, April 20, 2026 -->
 const CURRENT_DAY = 4;
-<!-- DAILY_END -->
-
-// ─── POST DATA ───────────────────────────────────────────
-// TAG DEFINITIONS: story | creative | lifestyle | mindset | people
 const posts = [
   {
     day: 1, tag: "story", tagLabel: "Story",
-    title: "Why I let AI do the backend & I'll do the creative",
     hook: "Day 1 / 30",
-    draft: "I've watched people write blogs, record podcasts, share thoughts for years. Today I ask AI to summarize — so don't you think, let AI do the backend part and time for me to be creative. Here's my bet: 30 seconds of your time, 30 days straight of creativity. Let's see what happens. 🚀 #30Days30Seconds"
+    title: "Why I let AI do the backend & I'll do the creative",
+    draft: "I've watched people write blogs, record podcasts, share thoughts for years. Today I ask AI to summarize — let AI do the backend part and time for me to be creative. Here's my bet: 30 seconds of your time, 30 days straight of creativity. Let's see what happens. 🚀 #30Days30Seconds"
   },
   {
     day: 2, tag: "creative", tagLabel: "Creative",
-    title: "Stop picking AI tools. Start picking goals.",
     hook: "Day 2 / 30",
-    draft: "Everyone's debating: ChatGPT vs Gemini vs Claude vs Copilot. Meanwhile I asked myself one question — what am I actually trying to solve? I spent 2 hrs comparing tools last month. Wasted. Then spent 20 mins defining my goal. Built blinkthirty in a weekend. Same tools, different mindset. 2 hrs of comparison → 0 output. 20 mins of clarity → 30-day challenge live. Don't optimise the tool. Optimise the goal. 🎯 #30Days30Seconds"
+    title: "Stop picking AI tools. Start picking goals.",
+    draft: "Everyone's debating: ChatGPT vs Gemini vs Claude vs Copilot. Meanwhile I asked myself one question — what am I actually trying to solve? Built blinkthirty in a weekend. Same tools, different mindset. Don't optimise the tool. Optimise the goal. 🎯 #30Days30Seconds"
   },
   {
     day: 3, tag: "lifestyle", tagLabel: "Lifestyle",
-    title: "Lifestyle isn't your watch. It's what you do on a Friday.",
     hook: "Day 3 / 30",
-    draft: "Everyone chases a 'better lifestyle.' Materialistic things give you a rush, then Tuesday arrives and it's just another alarm. My lifestyle? Trying something new every Friday. Cooking a dish I've never attempted. Renaming things my friends still haven't forgiven me for 😂 Managing back-to-back meetings, somehow convincing yourself you deserve a vacation ⚡ booking flights on a Thursday, landing Saturday, already half-packed to leave Sunday, and somehow before the return flight a full reel is edited, captioned and posted. That's the real multitasking nobody puts on a CV. The chai that hits different at 11pm with your people. The small wins nobody claps for but you remember forever. Yes I do enjoy test driving cars and buying expensive stuff once in a while, not going to lie. But that dopamine never once fixed a Monday. The laugh with a friend did. Lifestyle = what excites you, not what impresses others. What's yours? 👇 #30Days30Seconds"
+    title: "Lifestyle isn't your watch. It's what you do on a Friday.",
+    draft: "Everyone chases a better lifestyle. Materialistic things give you a rush, then Tuesday arrives. My lifestyle? Trying something new every Friday. The chai that hits different at 11pm with your people. Lifestyle = what excites you, not what impresses others. What's yours? 👇 #30Days30Seconds"
   },
   {
     day: 4, tag: "creative", tagLabel: "Creative",
-    title: "Where I actually get my best ideas (hint: not my desk)",
     hook: "Day 4 / 30",
-    draft: "Turns out I do my best thinking in the shower, on walks, and weirdly… in traffic. Nowhere near my desk. Creativity doesn't clock in. Anyone else relate? 😂"
-  },
-  {
-    day: 5, tag: "people", tagLabel: "People",
-    title: "The person who believed in me before I did",
-    hook: "Day 5 / 30",
-    draft: "There's always someone who saw it in you before you did. One sentence from them changed my entire direction. Who was yours?"
-  },
-  {
-    day: 6, tag: "mindset", tagLabel: "Mindset",
-    title: "What 'failure' actually taught me",
-    hook: "Day 6 / 30",
-    draft: "My biggest failure wasn't a dead end. It was a detour with a better view. I just couldn't see it while I was in it. What has failure quietly taught you?"
-  },
-  {
-    day: 7, tag: "creative", tagLabel: "Creative",
-    title: "A book that rewired how I think about creativity",
-    hook: "Day 7 / 30",
-    draft: "One book, one paragraph — completely shifted how I saw the creative process. I've read it three times now. Drop a 📚 if you want the title."
-  },
-  {
-    day: 8, tag: "story", tagLabel: "Story",
-    title: "The day I almost quit — and why I didn't",
-    hook: "Day 8 / 30",
-    draft: "There was a specific Tuesday afternoon when I was ready to walk away from everything. Sometimes the almost-quit moments become the actual turning point."
-  },
-  {
-    day: 9, tag: "lifestyle", tagLabel: "Lifestyle",
-    title: "Things I believed at 22 that make me laugh now",
-    hook: "Day 9 / 30",
-    draft: "At 22 I thought: hustle 24/7 = success. Now I know: rest is strategy. Protect your energy like it's your most valuable asset. What belief have you outgrown? 😄"
-  },
-  {
-    day: 10, tag: "story", tagLabel: "Story",
-    title: "10 days in — what showing up daily actually feels like",
-    hook: "Day 10 / 30",
-    draft: "10 posts. 10 days. The hardest part isn't writing. It's starting. Every. Single. Day. The blank page doesn't get easier — you just get braver. 🔟"
-  },
-  {
-    day: 11, tag: "mindset", tagLabel: "Mindset",
-    title: "Why I stopped comparing my chapter 1 to someone's chapter 20",
-    hook: "Day 11 / 30",
-    draft: "Comparison is a trap. It compares your behind-the-scenes to everyone else's highlight reel. Run your own race. At your own pace."
-  },
-  {
-    day: 12, tag: "people", tagLabel: "People",
-    title: "The most underrated skill nobody teaches you",
-    hook: "Day 12 / 30",
-    draft: "Listening. Not waiting-to-speak listening. Actually-absorbing-what-someone-said listening. It's rare. It's powerful. And it will take you further than most hard skills."
-  },
-  {
-    day: 13, tag: "people", tagLabel: "People",
-    title: "A conversation that changed my perspective",
-    hook: "Day 13 / 30",
-    draft: "Over coffee, someone said something that took 3 days to fully hit me. Some conversations are slow bombs. 💬 Ever had one of those?"
-  },
-  {
-    day: 14, tag: "lifestyle", tagLabel: "Lifestyle",
-    title: "My most embarrassing 'confident but completely wrong' moment",
-    hook: "Day 14 / 30",
-    draft: "I once confidently explained something in a room full of experts. I was very, very wrong. The silence that followed... I still feel it. 😅 Anyone else?"
-  },
-  {
-    day: 15, tag: "story", tagLabel: "Story",
-    title: "Halfway there — the real honest story behind this challenge",
-    hook: "Day 15 / 30 🎯",
-    draft: "15 days ago I wasn't sure I'd make it here. Here's the honest truth about why I started, what I hoped for, and what completely surprised me."
-  },
-  {
-    day: 16, tag: "people", tagLabel: "People",
-    title: "What a difficult collaboration taught me about patience",
-    hook: "Day 16 / 30",
-    draft: "Not every collaboration is smooth. Some are sandpaper. But sandpaper smooths rough edges. The difficult people taught me more than the easy ones ever did."
-  },
-  {
-    day: 17, tag: "mindset", tagLabel: "Mindset",
-    title: "The 2-word question I ask before every decision",
-    hook: "Day 17 / 30",
-    draft: "'So what?' — It sounds harsh but asking this before any decision clears the fog instantly. Does this actually matter? If yes — go. If no — let it go."
-  },
-  {
-    day: 18, tag: "creative", tagLabel: "Creative",
-    title: "How I use AI without losing my creative voice",
-    hook: "Day 18 / 30",
-    draft: "AI is my research assistant, my first draft editor, my sounding board. But the idea? The angle? The soul of it? That's still mine. Tools amplify creativity — they don't replace it."
-  },
-  {
-    day: 19, tag: "lifestyle", tagLabel: "Lifestyle",
-    title: "A place that unexpectedly gave me my best idea",
-    hook: "Day 19 / 30",
-    draft: "My best idea in the last year came to me somewhere completely unexpected. Not in a meeting. Not at my desk. Ideas don't care about office hours. 💡"
-  },
-  {
-    day: 20, tag: "people", tagLabel: "People",
-    title: "What I learned from someone who was nothing like me",
-    hook: "Day 20 / 30",
-    draft: "We disagreed on almost everything. But every conversation stretched my thinking. The most valuable people in your life aren't always the ones who agree with you."
-  },
-  {
-    day: 21, tag: "story", tagLabel: "Story",
-    title: "A risk I took that looked crazy — and paid off",
-    hook: "Day 21 / 30",
-    draft: "Everyone in the room thought it was a bad idea. I wasn't sure either. But it worked. The risk wasn't the scary part — the regret of not trying would have been."
-  },
-  {
-    day: 22, tag: "mindset", tagLabel: "Mindset",
-    title: "Why I stopped being consistent and started being intentional",
-    hook: "Day 22 / 30",
-    draft: "Consistency for its own sake burned me out. Now I ask: is this intentional? If yes — I show up. If not — I reconsider. Intention > Habit. Always."
-  },
-  {
-    day: 23, tag: "creative", tagLabel: "Creative",
-    title: "The creative block nobody talks about honestly",
-    hook: "Day 23 / 30",
-    draft: "It's not running out of ideas. It's the fear that your ideas aren't good enough. That's the real block. The cure? Ship the imperfect one. The next idea always follows."
-  },
-  {
-    day: 24, tag: "lifestyle", tagLabel: "Lifestyle",
-    title: "One thing I do differently now vs 2 years ago",
-    hook: "Day 24 / 30",
-    draft: "Two years ago I said yes to everything. Now I protect my no like it's currency. Because it is. 'No' to the wrong things is 'yes' to the right ones."
-  },
-  {
-    day: 25, tag: "lifestyle", tagLabel: "Lifestyle",
-    title: "The strangest feedback I ever received",
-    hook: "Day 25 / 30",
-    draft: "Someone once told me I was 'too enthusiastic.' I thought about it for a week. Then decided: that's my feature, not a bug. Own your weird. 😄"
-  },
-  {
-    day: 26, tag: "people", tagLabel: "People",
-    title: "To anyone starting out — here's what I wish someone told me",
-    hook: "Day 26 / 30",
-    draft: "You don't need to have it all figured out. Just take one honest step forward. The path gets clearer as you walk it — not before. To anyone at the start: keep going."
-  },
-  {
-    day: 27, tag: "story", tagLabel: "Story",
-    title: "The moment I realized what I actually want",
-    hook: "Day 27 / 30",
-    draft: "It wasn't a dramatic lightning bolt. It was quiet. A regular afternoon. Something just clicked. Have you had that moment? When was it for you?"
-  },
-  {
-    day: 28, tag: "mindset", tagLabel: "Mindset",
-    title: "What 30 days of showing up taught me about discipline",
-    hook: "Day 28 / 30",
-    draft: "Discipline isn't motivation. Motivation comes and goes. Discipline is just showing up even when motivation left the chat. 28 days in — I know this in my bones now."
-  },
-  {
-    day: 29, tag: "creative", tagLabel: "Creative",
-    title: "One thing I'm leaving behind — one I'm carrying into Season 2",
-    hook: "Day 29 / 30",
-    draft: "Leaving behind: perfectionism as procrastination. Carrying forward: the creative muscle I've built by showing up daily. What are you shedding? What are you keeping?"
-  },
-  {
-    day: 30, tag: "story", tagLabel: "Story",
-    title: "Season 1 — done. Here's what actually happened.",
-    hook: "Day 30 / 30 🎬",
-    draft: "30 posts. 30 seconds. 30 days. I came here to share a little. I didn't expect to learn a lot. Whether Season 2 happens depends on you — did this 30 seconds matter? Drop a 🎬 if it did. Thank you for watching Season 1. 👇"
+    title: "Where I actually get my best ideas (hint: not my desk)",
+    draft: "Turns out I do my best thinking in the shower, on walks, and weirdly in traffic. Nowhere near my desk. Creativity doesn't clock in. Anyone else relate? 😂"
   }
 ];
+<!-- DAILY_END -->
 
 // ─── FUNNY LOCKED MESSAGES ───────────────────────────────
 const funnyMessages = [
