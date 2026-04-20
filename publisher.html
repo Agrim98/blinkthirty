@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Publisher · blinkthirty</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f0e8;
+    min-height: 100vh;
+    padding: 24px 16px;
+    color: #0a0a0a;
+  }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 480px;
+    margin: 0 auto;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #0a0a0a;
+  }
+  .sub {
+    font-size: 13px;
+    color: #8a8070;
+    margin-bottom: 24px;
+  }
+  .toggle-btn {
+    font-size: 13px;
+    color: #e8390e;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 16px;
+    display: block;
+    font-family: inherit;
+  }
+  .config-box {
+    background: #fafaf8;
+    border: 1px solid #e8e4dc;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .config-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8a8070;
+    margin-bottom: 14px;
+  }
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+  }
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    color: #0a0a0a;
+    font-family: inherit;
+    margin-bottom: 12px;
+  }
+  input:focus { outline: none; border-color: #e8390e; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row input { margin-bottom: 0; }
+  textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    color: #0a0a0a;
+    font-family: 'Courier New', monospace;
+    min-height: 100px;
+    resize: vertical;
+    margin-bottom: 16px;
+  }
+  textarea:focus { outline: none; border-color: #e8390e; }
+  .field-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #0a0a0a;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .hint {
+    font-size: 12px;
+    color: #8a8070;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    background: #fff8f0;
+    border-left: 3px solid #e8390e;
+    padding: 8px 10px;
+    border-radius: 0 6px 6px 0;
+  }
+  .publish-btn {
+    width: 100%;
+    padding: 14px;
+    background: #0a0a0a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .publish-btn:hover { background: #e8390e; }
+  .publish-btn:active { transform: scale(0.98); }
+  .publish-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .status {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+    line-height: 1.5;
+  }
+  .status.success { background: #e8f5e9; color: #2d6a4f; display: block; }
+  .status.error { background: #fdecea; color: #c0392b; display: block; }
+  .status.loading { background: #f5f0e8; color: #8a8070; display: block; }
+  .day-shortcuts {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .day-btn {
+    padding: 8px 4px;
+    font-size: 13px;
+    font-weight: 500;
+    background: #f5f0e8;
+    border: 1px solid #e0dbd0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    color: #0a0a0a;
+    transition: all 0.1s;
+  }
+  .day-btn:hover { background: #e8390e; color: white; border-color: #e8390e; }
+  .day-btn.active { background: #e8390e; color: white; border-color: #e8390e; }
+  .hidden { display: none; }
+  .divider { border: none; border-top: 1px solid #f0ede8; margin: 20px 0; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>⚡ Daily Publisher</h1>
+  <p class="sub">blinkthirty · One tap to update your site</p>
+
+  <button class="toggle-btn" onclick="toggleConfig()" id="toggle-btn">⚙ Config (set once) ▾</button>
+
+  <div id="config-box" class="config-box hidden">
+    <div class="config-title">GitHub Config</div>
+    <label>GitHub Token</label>
+    <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" oninput="save()" />
+    <div class="row">
+      <div>
+        <label>Owner</label>
+        <input type="text" id="gh-owner" placeholder="Agrim98" oninput="save()" />
+      </div>
+      <div>
+        <label>Repo</label>
+        <input type="text" id="gh-repo" placeholder="blinkthirty" oninput="save()" />
+      </div>
+    </div>
+    <label>File path</label>
+    <input type="text" id="gh-file" placeholder="index.html" oninput="save()" />
+  </div>
+
+  <hr class="divider">
+
+  <span class="field-label">What day are you posting today?</span>
+  <div class="day-shortcuts" id="day-grid"></div>
+
+  <div class="hint">
+    Tap a day above — it auto-fills the content box below. Then hit Publish.
+  </div>
+
+  <span class="field-label">Content to publish</span>
+  <textarea id="content" placeholder="const CURRENT_DAY = 4;"></textarea>
+
+  <button class="publish-btn" onclick="publish()" id="pub-btn">Publish today's post ↗</button>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+// Build day buttons 1–30
+const grid = document.getElementById('day-grid');
+let activeDay = null;
+for (let i = 1; i <= 30; i++) {
+  const btn = document.createElement('button');
+  btn.className = 'day-btn';
+  btn.textContent = `Day ${i}`;
+  btn.onclick = () => selectDay(i, btn);
+  grid.appendChild(btn);
+}
+
+function selectDay(day, btn) {
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('content').value = `const CURRENT_DAY = ${day};`;
+  activeDay = day;
+}
+
+function toggleConfig() {
+  const box = document.getElementById('config-box');
+  const btn = document.getElementById('toggle-btn');
+  box.classList.toggle('hidden');
+  btn.textContent = box.classList.contains('hidden')
+    ? '⚙ Config (set once) ▾'
+    : '⚙ Config (set once) ▴';
+}
+
+function save() {
+  const data = {
+    token: document.getElementById('gh-token').value,
+    owner: document.getElementById('gh-owner').value,
+    repo: document.getElementById('gh-repo').value,
+    file: document.getElementById('gh-file').value,
+  };
+  try { localStorage.setItem('blinkthirty-config', JSON.stringify(data)); } catch(e) {}
+}
+
+function load() {
+  try {
+    const data = JSON.parse(localStorage.getItem('blinkthirty-config') || '{}');
+    if (data.token) document.getElementById('gh-token').value = data.token;
+    if (data.owner) document.getElementById('gh-owner').value = data.owner;
+    if (data.repo) document.getElementById('gh-repo').value = data.repo;
+    if (data.file) document.getElementById('gh-file').value = data.file;
+  } catch(e) {}
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status ' + type;
+}
+
+async function publish() {
+  const token = document.getElementById('gh-token').value.trim();
+  const owner = document.getElementById('gh-owner').value.trim() || 'Agrim98';
+  const repo = document.getElementById('gh-repo').value.trim() || 'blinkthirty';
+  const file = document.getElementById('gh-file').value.trim() || 'index.html';
+  const content = document.getElementById('content').value.trim();
+
+  if (!token) { setStatus('⚠ Please add your GitHub token in Config first.', 'error'); return; }
+  if (!content) { setStatus('⚠ Please select a day or enter content.', 'error'); return; }
+
+  const btn = document.getElementById('pub-btn');
+  btn.disabled = true;
+  setStatus('Publishing...', 'loading');
+
+  try {
+    const res = await fetch('/.netlify/functions/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, owner, repo, file, content })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Unknown error');
+
+    setStatus('✅ Published! Netlify is deploying — your site updates in ~30 seconds.', 'success');
+  } catch(e) {
+    setStatus('❌ Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+load();
+</script>
+</body>
+</html>
