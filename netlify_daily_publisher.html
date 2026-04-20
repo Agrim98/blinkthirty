@@ -1,0 +1,195 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .wrap { padding: 1.25rem 1rem; max-width: 480px; }
+  h2 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+  label { font-size: 13px; color: var(--color-text-secondary); display: block; margin-bottom: 6px; }
+  input, textarea {
+    width: 100%; padding: 10px 12px; font-size: 14px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+  }
+  textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
+  .field { margin-bottom: 1rem; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+  .section {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  .section-title { font-size: 12px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+  .toggle-btn {
+    font-size: 13px; color: var(--color-text-info);
+    background: none; border: none; cursor: pointer; padding: 0;
+    margin-bottom: 12px; display: block;
+  }
+  .hidden { display: none; }
+  .publish-btn {
+    width: 100%; padding: 13px;
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    font-size: 15px; font-weight: 500;
+    color: var(--color-text-primary);
+    cursor: pointer; transition: background 0.15s;
+    font-family: var(--font-sans);
+  }
+  .publish-btn:hover { background: var(--color-background-secondary); }
+  .publish-btn:active { transform: scale(0.98); }
+  .publish-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .status {
+    margin-top: 1rem; padding: 12px 14px;
+    border-radius: var(--border-radius-md);
+    font-size: 14px; display: none;
+  }
+  .status.success { background: var(--color-background-success); color: var(--color-text-success); display: block; }
+  .status.error { background: var(--color-background-danger); color: var(--color-text-danger); display: block; }
+  .status.loading { background: var(--color-background-secondary); color: var(--color-text-secondary); display: block; }
+  .tip { font-size: 12px; color: var(--color-text-tertiary); margin-top: 6px; line-height: 1.5; }
+  .marker-row { display: flex; gap: 8px; align-items: center; }
+  .marker-row input { font-family: var(--font-mono); font-size: 12px; }
+</style>
+
+<div class="wrap">
+  <h2>Daily Publisher</h2>
+  <p class="sub">Paste your Claude content and publish to your Netlify site instantly.</p>
+
+  <button class="toggle-btn" onclick="toggleConfig()">⚙ Config (set once)</button>
+
+  <div class="section" id="config-section">
+    <div class="section-title">GitHub config</div>
+    <div class="field">
+      <label>GitHub Token</label>
+      <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" oninput="save()" />
+    </div>
+    <div class="row">
+      <div>
+        <label>Owner / username</label>
+        <input type="text" id="gh-owner" placeholder="yourname" oninput="save()" />
+      </div>
+      <div>
+        <label>Repo name</label>
+        <input type="text" id="gh-repo" placeholder="my-site" oninput="save()" />
+      </div>
+    </div>
+    <div class="field">
+      <label>File path</label>
+      <input type="text" id="gh-file" placeholder="index.html" oninput="save()" />
+    </div>
+    <div class="field">
+      <label>HTML markers (wraps your daily content)</label>
+      <div class="marker-row">
+        <input type="text" id="marker-start" placeholder="&lt;!-- DAILY_START --&gt;" oninput="save()" />
+        <input type="text" id="marker-end" placeholder="&lt;!-- DAILY_END --&gt;" oninput="save()" />
+      </div>
+      <p class="tip">Add these comments to your index.html where you want content injected.</p>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Today's content (paste from Claude)</label>
+    <textarea id="content" placeholder="Paste the content Claude generated for today's post here..."></textarea>
+  </div>
+
+  <button class="publish-btn" onclick="publish()" id="pub-btn">Publish today's post ↗</button>
+
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+function save() {
+  const fields = ['gh-token','gh-owner','gh-repo','gh-file','marker-start','marker-end'];
+  const data = {};
+  fields.forEach(f => data[f] = document.getElementById(f).value);
+  try { localStorage.setItem('publisher-config', JSON.stringify(data)); } catch(e) {}
+}
+
+function load() {
+  try {
+    const data = JSON.parse(localStorage.getItem('publisher-config') || '{}');
+    Object.keys(data).forEach(k => {
+      const el = document.getElementById(k);
+      if (el) el.value = data[k];
+    });
+  } catch(e) {}
+}
+
+function toggleConfig() {
+  const s = document.getElementById('config-section');
+  s.classList.toggle('hidden');
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status ' + type;
+}
+
+async function publish() {
+  const token = document.getElementById('gh-token').value.trim();
+  const owner = document.getElementById('gh-owner').value.trim();
+  const repo = document.getElementById('gh-repo').value.trim();
+  const file = document.getElementById('gh-file').value.trim() || 'index.html';
+  const ms = document.getElementById('marker-start').value.trim() || '<!-- DAILY_START -->';
+  const me = document.getElementById('marker-end').value.trim() || '<!-- DAILY_END -->';
+  const content = document.getElementById('content').value.trim();
+
+  if (!token || !owner || !repo) { setStatus('Please fill in GitHub config first.', 'error'); return; }
+  if (!content) { setStatus('Please paste your content first.', 'error'); return; }
+
+  const btn = document.getElementById('pub-btn');
+  btn.disabled = true;
+  setStatus('Fetching current file from GitHub...', 'loading');
+
+  try {
+    const apiBase = `https://api.github.com/repos/${owner}/${repo}/contents/${file}`;
+    const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+    const getRes = await fetch(apiBase, { headers });
+    if (!getRes.ok) throw new Error(`GitHub fetch failed: ${getRes.status} ${getRes.statusText}`);
+    const fileData = await getRes.json();
+
+    const currentHtml = atob(fileData.content.replace(/\n/g, ''));
+    const regex = new RegExp(`${ms.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${me.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`);
+
+    if (!regex.test(currentHtml)) {
+      throw new Error(`Markers not found in ${file}. Add <!-- DAILY_START --> and <!-- DAILY_END --> to your HTML.`);
+    }
+
+    const today = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    const newHtml = currentHtml.replace(regex, `${ms}\n<!-- Updated: ${today} -->\n${content}\n${me}`);
+
+    setStatus('Publishing to GitHub...', 'loading');
+
+    const putRes = await fetch(apiBase, {
+      method: 'PUT', headers,
+      body: JSON.stringify({
+        message: `Daily post: ${today}`,
+        content: btoa(unescape(encodeURIComponent(newHtml))),
+        sha: fileData.sha
+      })
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error(err.message || `GitHub push failed: ${putRes.status}`);
+    }
+
+    setStatus('Published! Netlify is deploying now — your site will update in ~30 seconds.', 'success');
+    document.getElementById('content').value = '';
+  } catch(e) {
+    setStatus('Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+load();
+document.getElementById('config-section').classList.add('hidden');
+</script>
